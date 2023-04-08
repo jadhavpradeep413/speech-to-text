@@ -33,7 +33,8 @@ function callApi2() {
      .then((response) => response.json())
      .then((data) => {
         console.log(data);
-        document.getElementsByName("response2").text = JSON.stringify(data.JSON);
+        alert(JSON.stringify(data));
+        document.getElementById("response2").value = JSON.stringify(data);
         // Handle data
      })
      .catch((err) => {
@@ -43,6 +44,7 @@ function callApi2() {
  
 const App = () => {
   const [ourText, setOurText] = useState("");
+  const [resText, setResText] = useState("");
   const msg = new SpeechSynthesisUtterance();
 
   const { transcript, resetTranscript } = useSpeechRecognition({
@@ -59,10 +61,17 @@ const App = () => {
     msg.text = ourText;    
     window.speechSynthesis.speak(msg);
   }
+
+  const speechHandler2 = (msg) => {
+    msg.text = resText;    
+    window.speechSynthesis.speak(msg);
+  }
  
 
   return (
     <div>
+      <h1>Welcome to Banking App</h1>
+      Available options are::
       <button onClick={SpeechRecognition.startListening}>Start</button>
       <button onClick={SpeechRecognition.stopListening}>Stop</button>
       <button onClick={resetTranscript}>Reset</button>
@@ -85,7 +94,8 @@ const App = () => {
       />
       <button onClick={() => speechHandler(msg)}>SPEAK</button>
 
-      <input name ="response2" type="text" value = ""/>
+      <input id ="response2" type="text"  value={resText} placeholder='Response' onChange={(e) => setResText(e.target.value)}/>
+      <button onClick={() => speechHandler2(msg)}>SPEAK2</button>
       
     </div>
     
