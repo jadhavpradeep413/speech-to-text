@@ -6,7 +6,7 @@ import SpeechRecognition, {
 
 
 function callApi() {
-  fetch('http://localhost:8080/test2',{
+  fetch('localhost:8080/api/v1/accounts',{
     method: "GET",
     headers: {
       "access-control-allow-origin" : "*",
@@ -15,11 +15,36 @@ function callApi() {
     .then(data => data.json()) // Parsing the data into a JavaScript object
     .then(json => alert(JSON.stringify(json))) // Displaying the stringified data in an alert popup
 }
+
+function callApi2() {
+  fetch('http://localhost:8080/api/v1/accounts', {    
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+      'Access-Control-Allow-Origin' : '*',
+      'mode' : 'no-cors'
+    },
+    body: JSON.stringify({
+      // Add parameters here
+      "sortCode": "65-93-37",
+      "accountNumber":"21956204"
+    })    
+  })
+     .then((response) => response.json())
+     .then((data) => {
+        console.log(data);
+        document.getElementsByName("response2").text = JSON.stringify(data.JSON);
+        // Handle data
+     })
+     .catch((err) => {
+        console.log(err.message);
+     });
+}
  
 const App = () => {
   const [ourText, setOurText] = useState("");
   const msg = new SpeechSynthesisUtterance();
-  
+
   const { transcript, resetTranscript } = useSpeechRecognition({
     continuous: true
   });
@@ -31,8 +56,8 @@ const App = () => {
 
 
   const speechHandler = (msg) => {
-    msg.text = ourText
-    window.speechSynthesis.speak(msg)
+    msg.text = ourText;    
+    window.speechSynthesis.speak(msg);
   }
  
 
@@ -45,20 +70,22 @@ const App = () => {
       We got the text <input type="text" value = {transcript}/>
       <div className="App">
       <header className="App-header">
-        <button onClick={callApi}>Call API</button>
+        <button onClick={callApi2}>Call API</button>
       </header>
 
      
     </div>
 
      
-    <input
+    <input id="tbx" name="tbx"
         type='text'
         value={ourText}
-        placeholder='Enter Text'
+        placeholder={transcript}
         onChange={(e) => setOurText(e.target.value)}
       />
       <button onClick={() => speechHandler(msg)}>SPEAK</button>
+
+      <input name ="response2" type="text" value = ""/>
       
     </div>
     
